@@ -23,6 +23,7 @@ namespace DevIO.Api.Configuration
             {
                 c.OperationFilter<SwaggerDefaultValues>();
 
+                //Autorização via JWT no Swagger
                 c.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
                 {
                     Description = "Insira o token JWT desta maneira: Bearer {seu token}",
@@ -47,6 +48,7 @@ namespace DevIO.Api.Configuration
                         new string[] {}
                     }
                 });
+                //-----------------------------
             });
 
             return services;
