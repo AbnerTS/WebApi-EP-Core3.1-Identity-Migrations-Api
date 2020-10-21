@@ -4,6 +4,7 @@ using DevIO.Api.ViewModels;
 using DevIO.Business.Intefaces;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using System;
@@ -27,16 +28,19 @@ namespace DevIO.API.V1.Controllers
         private readonly UserManager<IdentityUser> _userManager;
         //JWT
         private readonly AppSettings _appSettings;
+        //Logging
+        private readonly ILogger _logger;
 
         public AuthController(INotificador notificador,
                               SignInManager<IdentityUser> signInManager,
                               IOptions<AppSettings> appSettings,
                               UserManager<IdentityUser> userManager,
-                              IUser user) : base(notificador, user)
+                              IUser user, ILogger<AuthController> logger) : base(notificador, user)
         {
             _signInManager = signInManager;
             _userManager = userManager;
             _appSettings = appSettings.Value;
+            _logger = logger;
         }
 
         [HttpPost("nova-conta")]
@@ -78,6 +82,7 @@ namespace DevIO.API.V1.Controllers
 
             if (result.Succeeded)
             {
+                _logger.LogInformation("Usuário " + loginUser.Email + " logado com sucesso!");
                 return CustomResponse(await GerarJwt(loginUser.Email)); //Usando token com claims
                 //Usando Token
                 //return CustomResponse(GerarJWT());
