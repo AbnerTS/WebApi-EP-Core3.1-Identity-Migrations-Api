@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
 using DevIO.Api.Configuration;
+using DevIO.Api.Extensions;
 using DevIO.Data.Context;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -43,6 +44,8 @@ namespace DevIO.API
 
             services.AddSwaggerConfig();
 
+            services.AddLoggingConfig(Configuration);
+
             services.ResolveDependencies();
 
             services.AddControllers();
@@ -59,6 +62,12 @@ namespace DevIO.API
             app.UseApiConfig(env);
 
             app.UseSwaggerConfig(provider);
+
+            app.UseLoggingConfiguration();
+
+            //Implemanta o ExceptionMiddleware para logar qualquer falha inclusive as não tratadas.
+            app.UseMiddleware<ExceptionMiddleware>();
+
         }
     }
 }
